@@ -1,0 +1,78 @@
+<div class="app-wrapper">
+  <div class="container">
+
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-icon">✅</div>
+      <h1 class="app-title">My Todos</h1>
+      <p class="app-subtitle">Angular 17 · Standalone Components</p>
+    </header>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar" *ngIf="stats.total > 0">
+      <div class="stat">
+        <span class="stat-value">{{ stats.total }}</span>
+        <span class="stat-label">Total</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-value active-count">{{ stats.active }}</span>
+        <span class="stat-label">Active</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-value done-count">{{ stats.completed }}</span>
+        <span class="stat-label">Done</span>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-wrap" *ngIf="stats.total > 0">
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="(stats.completed / stats.total) * 100"></div>
+      </div>
+      <span class="progress-label">{{ (stats.completed / stats.total * 100) | number:'1.0-0' }}% complete</span>
+    </div>
+
+    <!-- Add Todo -->
+    <app-add-todo (addTodo)="onAdd($event)"></app-add-todo>
+
+    <!-- Filter Tabs -->
+    <div class="filter-tabs" *ngIf="stats.total > 0">
+      <button class="filter-btn" [class.active]="filter === 'all'"       (click)="setFilter('all')">All</button>
+      <button class="filter-btn" [class.active]="filter === 'active'"    (click)="setFilter('active')">Active</button>
+      <button class="filter-btn" [class.active]="filter === 'completed'" (click)="setFilter('completed')">Completed</button>
+    </div>
+
+    <!-- Todo List -->
+    <div class="todo-list" *ngIf="filtered.length > 0">
+      <app-todo-item
+        *ngFor="let todo of filtered; trackBy: trackById"
+        [todo]="todo"
+        (toggle)="onToggle($event)"
+        (delete)="onDelete($event)"
+        (update)="onUpdate($event)">
+      </app-todo-item>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filtered.length === 0">
+      <div class="empty-icon">
+        <span *ngIf="filter === 'all'">📋</span>
+        <span *ngIf="filter === 'active'">🎉</span>
+        <span *ngIf="filter === 'completed'">📌</span>
+      </div>
+      <p class="empty-text" *ngIf="filter === 'all'">No todos yet. Add one above!</p>
+      <p class="empty-text" *ngIf="filter === 'active'">All caught up! Nothing active.</p>
+      <p class="empty-text" *ngIf="filter === 'completed'">No completed todos yet.</p>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer" *ngIf="stats.completed > 0">
+      <button class="clear-btn" (click)="onClearCompleted()">
+        Clear {{ stats.completed }} completed
+      </button>
+    </footer>
+
+  </div>
+</div>
