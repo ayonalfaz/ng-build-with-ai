@@ -5,7 +5,6 @@ import { Todo } from '../../models/todo.model';
 
 @Component({
     selector: 'app-todo-item',
-    standalone: true,
     imports: [CommonModule, FormsModule],
     template: `
     <div class="todo-item" [class.completed]="todo.completed">

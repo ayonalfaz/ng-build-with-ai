@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-add-todo',
-    standalone: true,
     imports: [FormsModule, CommonModule],
     template: `
     <form class="add-todo-form" (ngSubmit)="onSubmit()">

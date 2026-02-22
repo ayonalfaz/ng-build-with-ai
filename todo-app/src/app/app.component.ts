@@ -8,11 +8,10 @@ import { TodoItemComponent } from './components/todo-item/todo-item.component';
 type FilterType = 'all' | 'active' | 'completed';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [CommonModule, AddTodoComponent, TodoItemComponent],
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+    selector: 'app-root',
+    imports: [CommonModule, AddTodoComponent, TodoItemComponent],
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
   todos: Todo[] = [];

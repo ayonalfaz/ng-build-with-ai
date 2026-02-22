@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Angular Migration Workflow</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap');
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            font-size: 12.5px;
+            color: #111;
+            background: #fff;
+            max-width: 740px;
+            margin: 0 auto;
+            padding: 52px 48px 64px;
+            line-height: 1.7;
+        }
+
+        /* COVER */
+        .cover {
+            border-bottom: 2px solid #111;
+            padding-bottom: 24px;
+            margin-bottom: 32px;
+        }
+
+        .cover-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .cover h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.25;
+        }
+
+        .cover p {
+            font-size: 12.5px;
+            color: #444;
+            max-width: 580px;
+            margin-bottom: 14px;
+        }
+
+        .cover-meta {
+            font-size: 11px;
+            color: #888;
+        }
+
+        .flow {
+            margin-top: 16px;
+            font-size: 11px;
+            color: #333;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        /* SECTION */
+        h2 {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: #111;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin: 30px 0 14px;
+        }
+
+        h3 {
+            font-size: 12px;
+            font-weight: 600;
+            color: #222;
+            margin: 14px 0 5px;
+        }
+
+        p {
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        /* LISTS */
+        ul,
+        ol {
+            padding-left: 20px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        li {
+            margin-bottom: 3px;
+        }
+
+        /* CODE */
+        pre {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            padding: 10px 14px;
+            margin: 8px 0 12px;
+            overflow-x: auto;
+            page-break-inside: avoid;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 11px;
+            color: #111;
+            line-height: 1.6;
+        }
+
+        p code,
+        li code,
+        td code {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 2px;
+            padding: 1px 5px;
+            font-size: 11px;
+            color: #333;
+        }
+
+        /* TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8px 0 14px;
+            font-size: 11.5px;
+        }
+
+        th {
+            background: #f0f0f0;
+            text-align: left;
+            padding: 5px 9px;
+            border: 1px solid #ccc;
+            font-weight: 600;
+            font-size: 10.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 5px 9px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) td {
+            background: #fafafa;
+        }
+
+        /* NOTICE */
+        .notice {
+            border: 1px solid #bbb;
+            border-left: 3px solid #333;
+            background: #f9f9f9;
+            padding: 9px 13px;
+            font-size: 12px;
+            color: #333;
+            margin: 10px 0 16px;
+        }
+
+        /* DIVIDER */
+        hr {
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            margin: 28px 0;
+        }
+
+        /* FOOTER */
+        .footer {
+            margin-top: 44px;
+            padding-top: 12px;
+            border-top: 1px solid #ccc;
+            font-size: 10px;
+            color: #888;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        @media print {
+            body {
+                padding: 20px 28px;
+            }
+
+            pre,
+            table,
+            .notice {
+                page-break-inside: avoid;
+            }
+
+            h2 {
+                page-break-after: avoid;
+            }
+
+            @page {
+                margin: 18mm 14mm;
+                size: A4;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- COVER -->
+    <div class="cover">
+        <div class="cover-label">Technical Reference</div>
+        <h1>Angular Migration Workflow<br>— How It Works</h1>
+        <p>A repeatable AI-driven process for upgrading Angular applications. The AI handles discovery, execution,
+            blocker resolution, and verification. Human sign-off is required at two explicit gates.</p>
+        <div class="cover-meta">Version 1.0 &nbsp;·&nbsp; February 2026 &nbsp;·&nbsp; Trigger:
+            <code>/angular-migration</code> in AI chat
+        </div>
+        <div class="flow">Lifecycle: &nbsp; Phase 1: Plan &rarr; Gate 1: Approve &rarr; Phase 2: Pre-flight &rarr; Phase
+            3: Execute &rarr; Phase 4: Verify &rarr; Gate 2: Recommend</div>
+    </div>
+
+
+    <!-- PHASE 1 -->
+    <h2>Phase 1 &mdash; Discovery &amp; Planning</h2>
+
+    <h3>1.1 &mdash; Gather Context</h3>
+    <p>AI reads the following before writing any plan:</p>
+    <ul>
+        <li><code>package.json</code> &mdash; current Angular and all dependency versions</li>
+        <li><code>angular.json</code> &mdash; workspace config, builders, schematics</li>
+        <li><code>tsconfig.json</code> / <code>tsconfig.base.json</code> &mdash; TypeScript version and strict flags
+        </li>
+        <li><code>.eslintrc</code> / <code>eslint.config.*</code> &mdash; lint configuration</li>
+        <li><code>app.module.ts</code> or <code>app.config.ts</code> &mdash; detect NgModule vs standalone architecture
+        </li>
+    </ul>
+
+    <h3>1.2 &mdash; Research the Migration Path</h3>
+    <p>For each version jump (e.g. 16 &rarr; 17 &rarr; 18), AI reads:</p>
+    <ul>
+        <li>Angular Update Guide: <code>https://update.angular.io/?l=3&amp;v={FROM}-{TO}</code></li>
+        <li>Angular CHANGELOG: <code>https://github.com/angular/angular/blob/main/CHANGELOG.md</code></li>
+    </ul>
+    <p>Identifies: Node.js version range, TypeScript requirements, removed/deprecated APIs, available schematics,
+        third-party library compatibility (Material, NgRx, RxJS).</p>
+
+    <h3>1.3 &mdash; Codebase Audit</h3>
+    <pre><code>npx ng version
+
+# Scan for deprecated API usages
+grep -rn "ComponentFactoryResolver\|Renderer\b\|ModuleWithProviders\|HttpClientModule\|BrowserAnimationsModule" src/ --include="*.ts"
+
+# Count standalone vs module-based components
+grep -rn "standalone: true" src/ --include="*.ts" | wc -l
+grep -rn "NgModule" src/ --include="*.ts" | wc -l</code></pre>
+
+    <h3>1.4 &mdash; Build the Migration Plan</h3>
+    <p>AI writes <code>implementation_plan.md</code> with these required sections:</p>
+    <table>
+        <tr>
+            <th>Section</th>
+            <th>Contents</th>
+        </tr>
+        <tr>
+            <td>Current State</td>
+            <td>Versions table: Angular, Node, TypeScript, RxJS, Material, etc.</td>
+        </tr>
+        <tr>
+            <td>Target State</td>
+            <td>New versions for every affected package</td>
+        </tr>
+        <tr>
+            <td>Breaking Changes</td>
+            <td>Only changes relevant to this codebase</td>
+        </tr>
+        <tr>
+            <td>Migration Steps</td>
+            <td>Ordered list of exact commands and file changes</td>
+        </tr>
+        <tr>
+            <td>Risk Assessment</td>
+            <td>High / Medium / Low risk items with mitigations</td>
+        </tr>
+        <tr>
+            <td>Estimated Effort</td>
+            <td>Time estimate per step</td>
+        </tr>
+        <tr>
+            <td>Rollback Plan</td>
+            <td>How to revert via git stash / commit</td>
+        </tr>
+    </table>
+
+    <div class="notice">
+        <strong>Gate 1 &mdash; Human Approval Required.</strong> AI stops and delivers
+        <code>implementation_plan.md</code> for review. Nothing is changed until the user explicitly approves. Plan
+        changes can be requested before approval.
+    </div>
+
+    <hr />
+
+    <!-- PHASE 2 -->
+    <h2>Phase 2 &mdash; Pre-Execution Setup</h2>
+
+    <h3>2.1 &mdash; Create a Safety Checkpoint</h3>
+    <pre><code>git status
+git stash push -m "pre-migration-stash-$(date +%Y%m%d_%H%M%S)"</code></pre>
+    <p>If git is not initialised, this step is skipped and noted in the task log.</p>
+
+    <h3>2.2 &mdash; Verify Node.js Compatibility</h3>
+    <pre><code>node --version</code></pre>
+    <p>If the current Node.js version does not satisfy the target Angular version's engine requirement, AI halts and
+        notifies the user. No migration proceeds on an incompatible Node version.</p>
+
+    <hr />
+
+    <!-- PHASE 3 -->
+    <h2>Phase 3 &mdash; Execution</h2>
+
+    <p>AI executes steps in the exact order from the approved plan. Each step is tracked in <code>task.md</code> as
+        <code>[/]</code> (in-progress) &rarr; <code>[x]</code> (done). On failure, the Blocker Resolution Protocol below
+        activates.
+    </p>
+
+    <h3>Core Migration Commands (in order)</h3>
+    <pre><code># 3.1 — Angular core
+npx ng update @angular/core@{TARGET} @angular/cli@{TARGET} --allow-dirty --force
+
+# 3.2 — Angular Material (if used)
+npx ng update @angular/material@{TARGET} --allow-dirty --force
+
+# 3.3 — Angular CDK (if used)
+npx ng update @angular/cdk@{TARGET} --allow-dirty --force
+
+# 3.4 — RxJS
+npm install rxjs@{TARGET_VERSION}
+
+# 3.5 — TypeScript
+npm install typescript@{TARGET_VERSION} --save-dev
+
+# 3.6 — Third-party packages (per dependency)
+npm install {PACKAGE}@latest
+
+# 3.7 — Automatic schematics
+npx ng generate @angular/core:standalone        # NgModule → standalone
+npx ng generate @angular/material:mdc-migration  # Material MDC migration
+
+# 3.8 — Update tsconfig.json (strict flags, target, lib) manually as needed</code></pre>
+
+    <h3>Blocker Resolution Protocol</h3>
+    <table>
+        <tr>
+            <th>Level</th>
+            <th>Trigger</th>
+            <th>Action</th>
+        </tr>
+        <tr>
+            <td><strong>1 &mdash; Auto-resolve</strong></td>
+            <td>Step fails on first try</td>
+            <td>Retry with <code>--legacy-peer-deps</code> / <code>--force</code>; fix TS errors per migration guide;
+                replace deprecated APIs; check for renamed modules</td>
+        </tr>
+        <tr>
+            <td><strong>2 &mdash; Research &amp; Fix</strong></td>
+            <td>Level 1 fails</td>
+            <td>Search Angular GitHub issues for the exact error; re-read version migration guide; apply the documented
+                fix</td>
+        </tr>
+        <tr>
+            <td><strong>3 &mdash; Escalate</strong></td>
+            <td>Level 1 + 2 fail</td>
+            <td>Stop at the blocked step. Write <code>REMAINING_TASKS.md</code> (completed steps, exact error, remaining
+                steps, suggested fixes). Run Phase 4 on partial state. Notify user.</td>
+        </tr>
+    </table>
+
+    <hr />
+
+    <!-- PHASE 4 -->
+    <h2>Phase 4 &mdash; Automated Verification Suite</h2>
+
+    <p>All checks run automatically after execution (full or partial). Results are logged in a pass/fail summary.</p>
+
+    <h3>Error Threshold Policy</h3>
+    <p>For every failing check, AI follows this escalation table before deciding whether to fix or hand off to the user:
+    </p>
+
+    <table>
+        <tr>
+            <th>Error Count</th>
+            <th>Action</th>
+        </tr>
+        <tr>
+            <td>0 errors</td>
+            <td>Pass &mdash; move to next check</td>
+        </tr>
+        <tr>
+            <td>1&ndash;9 errors</td>
+            <td>AI auto-fixes each one, re-runs the check to confirm, then continues</td>
+        </tr>
+        <tr>
+            <td>10&ndash;50 errors</td>
+            <td>AI fixes recognisable patterns (wrong imports, renamed APIs, type mismatches). Re-runs once. Reports
+                remaining errors in the summary and continues to the next check.</td>
+        </tr>
+        <tr>
+            <td>&gt; 50 errors</td>
+            <td><strong>AI stops fixing immediately.</strong> Records the full error log in
+                <code>REMAINING_TASKS.md</code>. Continues running the remaining checks to gather a full picture, but
+                makes no further fix attempts. Notifies user &mdash; blocked on human.</td>
+        </tr>
+    </table>
+
+    <p style="font-size:11.5px;color:#555;margin-bottom:14px;">
+        <em>Why stop at 50?</em> Above that threshold errors are almost always systemic &mdash; an incompatible library,
+        a wrong version pinned, or an architectural decision that needs a human call. Blindly patching 200+ errors risks
+        making things worse and can run indefinitely.
+    </p>
+
+    <h3>Checks</h3>
+    <table>
+        <tr>
+            <th>Check</th>
+            <th>Command</th>
+            <th>Pass Condition</th>
+            <th>On Failure</th>
+        </tr>
+        <tr>
+            <td>TypeScript types</td>
+            <td><code>npx tsc --noEmit</code></td>
+            <td>Exit code 0</td>
+            <td>Apply threshold policy above</td>
+        </tr>
+        <tr>
+            <td>Dev build</td>
+            <td><code>npx ng build --configuration=development</code></td>
+            <td>Bundle complete, 0 errors</td>
+            <td>Apply threshold policy above</td>
+        </tr>
+        <tr>
+            <td>Production build</td>
+            <td><code>npx ng build --configuration=production</code></td>
+            <td>Production bundle generated</td>
+            <td>If dev build had &gt;50 errors, skip and mark "skipped due to upstream failure"</td>
+        </tr>
+        <tr>
+            <td>Lint</td>
+            <td><code>npx ng lint</code></td>
+            <td>0 errors (warnings OK)</td>
+            <td>Auto-fix with <code>--fix</code> first, then apply threshold policy to remainder</td>
+        </tr>
+        <tr>
+            <td>Dev server runtime</td>
+            <td><code>npx ng serve --port 4299</code> (15s check)</td>
+            <td>Server stays running</td>
+            <td>If build failed, mark "skipped &mdash; build must pass first"</td>
+        </tr>
+        <tr>
+            <td>Bundle size</td>
+            <td><code>ls -lh dist/**/main*.js</code></td>
+            <td>No significant regression</td>
+            <td>Flag if &gt;20% increase vs pre-migration; report size regardless</td>
+        </tr>
+    </table>
+
+    <h3>Verification Summary (output format)</h3>
+    <table>
+        <tr>
+            <th>Check</th>
+            <th>Status</th>
+            <th>Errors Found</th>
+            <th>Action Taken</th>
+        </tr>
+        <tr>
+            <td>TypeScript types</td>
+            <td>&#10003; / &#10007;</td>
+            <td>N</td>
+            <td>Fixed / Escalated / Skipped</td>
+        </tr>
+        <tr>
+            <td>Dev build</td>
+            <td>&#10003; / &#10007;</td>
+            <td>N</td>
+            <td>Fixed / Escalated / Skipped</td>
+        </tr>
+        <tr>
+            <td>Prod build</td>
+            <td>&#10003; / &#10007;</td>
+            <td>N</td>
+            <td>Fixed / Escalated / Skipped</td>
+        </tr>
+        <tr>
+            <td>Lint</td>
+            <td>&#10003; / &#10007;</td>
+            <td>N</td>
+            <td>Fixed / Escalated / Skipped</td>
+        </tr>
+        <tr>
+            <td>Dev server</td>
+            <td>&#10003; / &#10007;</td>
+            <td>&mdash;</td>
+            <td>Running / Crashed / Skipped</td>
+        </tr>
+        <tr>
+            <td>Bundle size</td>
+            <td>info</td>
+            <td>&mdash;</td>
+            <td>X MB (&plusmn;Y% vs baseline)</td>
+        </tr>
+    </table>
+
+    <hr />
+
+    <!-- PHASE 5 -->
+    <h2>Phase 5 &mdash; Recommendations</h2>
+
+    <p>AI generates <code>RECOMMENDATIONS.md</code> with prioritised optional improvements. User decides whether to act
+        on them.</p>
+
+    <table>
+        <tr>
+            <th>Priority</th>
+            <th>Examples</th>
+        </tr>
+        <tr>
+            <td>High</td>
+            <td>Migrate remaining NgModule components to standalone &bull; Enable stricter TypeScript flags &bull;
+                Replace <code>toPromise()</code> with <code>firstValueFrom()</code></td>
+        </tr>
+        <tr>
+            <td>Medium</td>
+            <td>Remove redundant <code>CommonModule</code> imports &bull; Enable <code>@if</code> / <code>@for</code>
+                control flow syntax &bull; Switch to esbuild builder (<code>@angular/build</code>)</td>
+        </tr>
+        <tr>
+            <td>Low</td>
+            <td>Install Angular DevTools &bull; Migrate from Karma to Jest or Web Test Runner</td>
+        </tr>
+    </table>
+
+    <div class="notice">
+        <strong>Gate 2 &mdash; Optional.</strong> AI delivers <code>RECOMMENDATIONS.md</code> but does not block on it.
+        If the user opts in, a new workflow run is started focused only on recommendations.
+    </div>
+
+    <hr />
+
+    <!-- ARTEFACTS -->
+    <h2>Files Produced During the Workflow</h2>
+
+    <table>
+        <tr>
+            <th>File</th>
+            <th>Created</th>
+            <th>Purpose</th>
+        </tr>
+        <tr>
+            <td><code>implementation_plan.md</code></td>
+            <td>End of Phase 1</td>
+            <td>Full migration plan — presented at Gate 1 for human approval</td>
+        </tr>
+        <tr>
+            <td><code>task.md</code></td>
+            <td>Phase 3 start</td>
+            <td>Live checklist updated as each step completes</td>
+        </tr>
+        <tr>
+            <td><code>REMAINING_TASKS.md</code></td>
+            <td>Only if blocked</td>
+            <td>Completed steps, blocker details, remaining steps, suggested manual fixes</td>
+        </tr>
+        <tr>
+            <td><code>RECOMMENDATIONS.md</code></td>
+            <td>Phase 5</td>
+            <td>Prioritised optional post-migration improvements</td>
+        </tr>
+        <tr>
+            <td><code>walkthrough.md</code></td>
+            <td>End of workflow</td>
+            <td>Summary: what was migrated, verification results</td>
+        </tr>
+    </table>
+
+    <div class="footer">
+        <span>Angular Migration Workflow &mdash; Technical Reference</span>
+        <span>Trigger: <code>/angular-migration</code> in AI chat &nbsp;&middot;&nbsp; February 2026</span>
+    </div>
+
+</body>
+
+</html>

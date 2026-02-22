@@ -187,26 +187,39 @@ If after Level 1 + Level 2 the blocker CANNOT be resolved:
 
 Run ALL of the following checks after migration (or partial migration). Record pass/fail for each.
 
+### Error Threshold Policy
+
+Before running checks, understand the escalation thresholds that govern whether AI fixes errors or escalates:
+
+| Error count | Action |
+|---|---|
+| **0 errors** | ✅ Pass — move to next check |
+| **1–9 errors** | AI auto-fixes each one, re-runs the check to confirm, then continues |
+| **10–50 errors** | AI fixes recognisable patterns (wrong imports, renamed APIs, type mismatches). Re-runs once. Reports any remaining errors in the verification summary and continues to the next check. |
+| **> 50 errors** | AI **stops fixing immediately**. Records the full error log in `REMAINING_TASKS.md`. Continues running the remaining checks (to gather a full picture) but does NOT attempt further fixes. Notifies user with BlockedOnUser: **true**. |
+
+> **Why stop at 50?** Above that threshold, errors are almost always systemic — an incompatible third-party library, a wrong version pinned, or an architectural decision required. Blindly patching 200+ errors risks making things worse and can run indefinitely. Human review is faster and safer.
+
 ### Check 1 — TypeScript Type Checking
 ```bash
 npx tsc --noEmit
 ```
 ✅ Pass: exit code 0, no errors
-❌ Fail: record exact errors, attempt auto-fix if < 10 errors
+❌ Fail: apply Error Threshold Policy above
 
 ### Check 2 — Build (development mode)
 ```bash
 npx ng build --configuration=development
 ```
 ✅ Pass: "Application bundle generation complete" with 0 errors
-❌ Fail: record errors, attempt to fix common ones
+❌ Fail: apply Error Threshold Policy above
 
 ### Check 3 — Build (production mode)
 ```bash
 npx ng build --configuration=production
 ```
 ✅ Pass: production bundle generated successfully
-❌ Fail: record errors (often AOT compilation issues)
+❌ Fail: apply Error Threshold Policy above (AOT errors are often the same root cause as dev build — if dev build already failed with >50 errors, skip prod build and record as "skipped due to upstream failure")
 
 ### Check 4 — Lint
 ```bash
@@ -217,37 +230,36 @@ If no lint config exists:
 npx eslint "src/**/*.ts" --ext .ts
 ```
 ✅ Pass: 0 errors (warnings are acceptable)
-❌ Fail: record errors; auto-fix with `--fix` flag if applicable
+❌ Fail: auto-fix with `--fix` flag first, then re-run. Apply Error Threshold Policy to remaining errors.
 
 ### Check 5 — Dev Server Runtime Check
 ```bash
-# Start the dev server in background, wait 15s, then check if it's still running
 npx ng serve --port 4299 &
 sleep 15
 # Check the process is still alive (no crash)
 ```
 ✅ Pass: server is running and accessible
-❌ Fail: server crashed — record startup error
+❌ Fail: server crashed — record startup error. If build already failed, mark as "skipped — build must pass first".
 
 ### Check 6 — Bundle Size Check
 After a successful production build, check for any unusual bundle size increases:
 ```bash
 ls -lh dist/**/main*.js 2>/dev/null || dir dist /s /b *.js
 ```
-Report the main bundle size in the verification summary.
+Flag if main bundle increased by >20% compared to pre-migration size (if known). Report the size regardless.
 
 ### Verification Summary
 
 After all checks, create a verification table:
 
-| Check | Status | Notes |
-|---|---|---|
-| TypeScript types | ✅/❌ | ... |
-| Dev build | ✅/❌ | ... |
-| Prod build | ✅/❌ | ... |
-| Lint | ✅/❌ | ... |
-| Dev server | ✅/❌ | ... |
-| Bundle size | ℹ️ | X MB |
+| Check | Status | Errors Found | Action Taken |
+|---|---|---|---|
+| TypeScript types | ✅/❌ | N | Fixed / Escalated / Skipped |
+| Dev build | ✅/❌ | N | Fixed / Escalated / Skipped |
+| Prod build | ✅/❌ | N | Fixed / Escalated / Skipped |
+| Lint | ✅/❌ | N | Fixed / Escalated / Skipped |
+| Dev server | ✅/❌ | — | Running / Crashed |
+| Bundle size | ℹ️ | — | X MB (±Y% vs baseline) |
 
 ---
 
