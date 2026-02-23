@@ -44,6 +44,27 @@ ng test --include='**/todo.service.spec.ts'
 - App component refreshes from service after every mutation
 - No reactive programming (RxJS) for state - uses simple method calls and refresh pattern
 
+## AI Workflows
+
+Structured AI workflows are available in `.agent/workflows/`. Use these slash commands in any AI chat to run a guided workflow:
+
+| Command | Purpose |
+|---|---|
+| `/angular-generate` | Scaffold components, services, pipes, guards matching existing patterns |
+| `/angular-feature-plan` | Design a feature's architecture before writing any code |
+| `/angular-api-integration` | Scaffold a typed HTTP layer from an OpenAPI spec or endpoint list |
+| `/angular-test-generate` | Generate `.spec.ts` unit tests for existing files |
+| `/angular-docs-generate` | Generate JSDoc, API tables, README sections |
+| `/ai-code-review` | Review staged changes or a file against Angular best practices |
+| `/angular-security-audit` | Scan for XSS, secrets, broken auth, and dependency vulnerabilities |
+| `/angular-refactor` | Modernise code to current Angular patterns (signals, standalone, control flow) |
+| `/angular-migration` | Upgrade Angular to a new major version end-to-end |
+| `/angular-debug` | Diagnose and fix errors, build failures, and failing tests |
+
+See [`.agent/workflows/README.md`](../.agent/workflows/README.md) for the full index.
+
+---
+
 ## Key Conventions
 
 ### Component Style

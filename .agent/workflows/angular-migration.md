@@ -289,7 +289,8 @@ Common recommendation areas:
 - Enable Angular's new control flow syntax (`@if`, `@for`, `@switch`)
 - Set up `@angular/build` (esbuild) if still on webpack builder
 - Add Angular DevTools browser extension for debugging
-- Update unit test setup if using Karma → migrate to Jest or Web Test Runner
+- Update unit test setup if using Karma → migrate to Vitest (Angular 21+ default, faster and zoneless-compatible) or Jest
+- Run `/angular-refactor` to modernise code patterns (signals, standalone, control flow syntax) after the version upgrade
 
 ### Step 5.1 — Present recommendations to user
 

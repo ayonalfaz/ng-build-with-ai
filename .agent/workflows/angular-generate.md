@@ -61,12 +61,13 @@ Generate the artefact following the patterns discovered in Step 2.
 - If the project uses signals (`signal()`, `computed()`, `effect()`), use them
 - Include a skeleton HTML template relevant to the purpose
 - Include a skeleton CSS file (or inline styles if the project uses `styles: []`)
-- Do NOT generate a `.spec.ts` test file unless the user asks for it
+- Do NOT generate a `.spec.ts` test file unless the user asks for it — use `/angular-test-generate` for that
 
 ### Service generation rules
 - Use `providedIn: 'root'` unless the user specifies otherwise
 - Use `inject(HttpClient)` if the project uses inject(); use constructor otherwise
 - Return `Observable<T>` from HTTP methods unless the project uses signals-based state
+- If the project uses `httpResource()` for HTTP calls, use it instead of subscribe-based patterns
 - Add typed interfaces/models for any data the service handles
 - Include a basic error handling pattern matching existing services
 

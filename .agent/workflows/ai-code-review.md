@@ -90,6 +90,13 @@ Check each changed file against the following, and flag violations explicitly:
 - [ ] No commented-out code left in
 - [ ] No `console.log` / `console.error` statements left in (use a logging service)
 - [ ] No hardcoded API URLs or credentials in source files
+- [ ] No `toPromise()` usage — use `firstValueFrom()` or `lastValueFrom()` instead
+
+### Modern Angular pattern checks
+- [ ] No `*ngIf` / `*ngFor` in templates — use `@if` / `@for` control flow instead
+- [ ] No `BehaviorSubject` used as component/service state — prefer `signal()`
+- [ ] No `takeUntil` + destroy subject pattern — prefer `takeUntilDestroyed()`
+- [ ] No class-based guards — use functional `CanActivateFn`
 
 ### Security checks
 - [ ] No API keys, tokens, or secrets in any file
